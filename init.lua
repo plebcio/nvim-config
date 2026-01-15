@@ -722,7 +722,21 @@ require('lazy').setup({
         mason = {
           -- clangd = {},
           -- gopls = {},
-          -- pyright = {},
+          basedpyright = {
+            settings = {
+              basedpyright = {
+                analysis = {
+                  typeCheckingMode = 'basic',
+                  inlayHints = {
+                    variableTypes = false,
+                    callArgumentNames = false,
+                    functionReturnTypes = false,
+                    genericTypes = false,
+                  },
+                },
+              },
+            },
+          },
           -- rust_analyzer = {},
           -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
           --
@@ -1019,26 +1033,24 @@ require('lazy').setup({
   {
     'nvim-treesitter/nvim-treesitter',
     branch = 'main',
-    build = ":TSUpdate",
+    build = ':TSUpdate',
     config = function()
       local parsers = {
         -- Included by default, you can add your own you want ensure to be installed.
-        "c",
-        "lua",
-        "markdown",
-        "query",
-        "vim",
-        "vimdoc",
+        'c',
+        'lua',
+        'markdown',
+        'query',
+        'vim',
+        'vimdoc',
       }
 
       -- Install above parsers if they are missing.
-      vim.defer_fn(function()
-        require('nvim-treesitter').install(parsers)
-      end, 1000)
+      vim.defer_fn(function() require('nvim-treesitter').install(parsers) end, 1000)
 
       -- auto-start highlights & indentation
-      vim.api.nvim_create_autocmd("FileType", {
-        group = vim.api.nvim_create_augroup("Custom_enable_treesitter_features", {}),
+      vim.api.nvim_create_autocmd('FileType', {
+        group = vim.api.nvim_create_augroup('Custom_enable_treesitter_features', {}),
         callback = function(args)
           local buf = args.buf
           local filetype = args.match
@@ -1055,13 +1067,12 @@ require('lazy').setup({
           -- indent
           vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
           -- folding
-          vim.wo.foldmethod = "expr"
-          vim.wo.foldexpr   = "v:lua.vim.treesitter.foldexpr()"
+          vim.wo.foldmethod = 'expr'
+          vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
         end,
       })
-
-    end
-  }
+    end,
+  },
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
